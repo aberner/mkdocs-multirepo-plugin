@@ -205,6 +205,7 @@ class MultirepoPlugin(BasePlugin):
     def handle_repos_import(self, config: Config, repos: List[RepoConfig]) -> Config:
         """Imports documentation in other repos based on repos configuration"""
         need_to_derive_edit_uris: bool = config.get("edit_uri") is None
+        keep_docs_dir: bool = self.config.get("keep_docs_dir")
         docs_repo_objs: List[DocsRepo] = []
         for repo in repos:
             import_stmt = parse_repo_url(repo.import_url)
@@ -235,7 +236,7 @@ class MultirepoPlugin(BasePlugin):
                     keep_docs_dir=import_stmt.get("keep_docs_dir"),
                 )
             )
-        asyncio_run(batch_import(docs_repo_objs))
+        asyncio_run(batch_import(docs_repo_objs, keep_docs_dir=keep_docs_dir))
         for dr in docs_repo_objs:
             self.repos[dr.name] = dr
         return config
