@@ -359,4 +359,6 @@ class MultirepoPlugin(BasePlugin):
 
     def on_build_error(self, error):
         if self.temp_dir and self.config.get("cleanup"):
+            temp_dir = self.config.get("temp_dir")
+            log.info(f"Multirepo plugin is cleaning up {temp_dir}/")
             shutil.rmtree(str(self.temp_dir))
